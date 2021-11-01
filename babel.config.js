@@ -14,7 +14,8 @@ module.exports = {
     ['module-resolver', {
       alias: {
         '@main': './src/main',
-        '@shared': './src/shared'
+        '@shared': './src/shared',
+        '@modules': './src/modules'
       }
     }]
   ],
