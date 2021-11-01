@@ -20,6 +20,7 @@
     "@babel/preset-env": "^7.10.2",
     "@babel/preset-typescript": "^7.10.1",
     "@types/enigma.js": "^2.2.2",
+    "@types/jsonwebtoken": "^8.5.5",
     "@types/node": "^16.11.6",
     "@types/puppeteer": "^5.4.4",
     "@types/ws": "^8.2.0",
