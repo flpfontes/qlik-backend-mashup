@@ -9,3 +9,16 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id     String  @id @default(uuid())
+  name   String?
+  email  String  @unique
+  idQlik String  @map("id_qlik")
+
+  licenseQlik String? @map("license_qlik")
+
+  isAdmin Boolean @map("is_admin")
+
+  @@map("user")
+}
