@@ -2,13 +2,15 @@ import { licenseQlikEnum } from '@modules/user/repository/model/license-qlik'
 import { left, right } from '@shared/presentation/errors/either'
 import { UserRepository } from 'src/modules/user/repository/prisma/user'
 
+import { CreateToken } from '../adapters/jwt/contracts/create-token'
 import { UserDoesNotHaveValidLicenseError } from '../presentation/errors/user-does-not-have-valid-license'
 import { UserNotExistError } from '../presentation/errors/user-not-exist'
 import { SignInByQlikId } from './contracts/sign-in-by-qlik-id'
 
 export class SignInByQlikIdUseCase implements SignInByQlikId {
   constructor (
-    private readonly userRepository: UserRepository
+    private readonly userRepository: UserRepository,
+    private readonly jwtAdapter: CreateToken
   ) {}
 
   async execute (params: SignInByQlikId.Params): Promise<SignInByQlikId.Result> {
@@ -24,6 +26,14 @@ export class SignInByQlikIdUseCase implements SignInByQlikId {
       return left(new UserDoesNotHaveValidLicenseError())
     }
 
-    return right(user)
+    const { token } = this.jwtAdapter.create({ id: user.id, email: user.email })
+
+    return right({
+      user: {
+        email: user.email,
+        name: user.name
+      },
+      token
+    })
   }
 }
