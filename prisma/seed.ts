@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { LicenseQlik, PrismaClient } from '.prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -9,7 +9,7 @@ async function main () {
       email: 'felipe@athenasagricola.com.br',
       idQlik: 'x3UR2mhwP3s6rRvjEsh55P5IFQg18Pvy',
       isAdmin: true,
-      licenseQlik: 'professional'
+      licenseQlik: LicenseQlik.professional
     }
   })
 }
