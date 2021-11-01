@@ -26,12 +26,17 @@ export class SignInByQlikIdUseCase implements SignInByQlikId {
       return left(new UserDoesNotHaveValidLicenseError())
     }
 
-    const { token } = this.jwtAdapter.create({ id: user.id, email: user.email })
+    const { id, email, isAdmin, licenseQlik, name } = user
+
+    const { token } = this.jwtAdapter.create({ id, email })
 
     return right({
       user: {
-        email: user.email,
-        name: user.name
+        email,
+        idQlik,
+        isAdmin,
+        licenseQlik,
+        name
       },
       token
     })
