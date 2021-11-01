@@ -9,10 +9,8 @@ export const adaptRoute = (controller: Controller) => {
       ...(req.params || {}),
 
       // userId pode vir do middleware de autorização ou como body na redefinição de senha
-      userId: req.userId || req.body.userId,
-      currentCustomerId: req.currentCustomerId,
+      userId: req.userId || req.body.userId
 
-      rolesCustomer: req.rolesCustomer
     }
     const httpResponse = await controller.handle(request)
     if (httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299) {
