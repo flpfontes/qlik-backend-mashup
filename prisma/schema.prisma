@@ -10,13 +10,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum LicenseQlik {
+  professional
+  analyzer
+}
+
 model User {
   id     String  @id @default(uuid())
   name   String?
   email  String  @unique
   idQlik String  @map("id_qlik")
 
-  licenseQlik String? @map("license_qlik")
+  licenseQlik LicenseQlik? @map("license_qlik")
 
   isAdmin Boolean @map("is_admin")
 
