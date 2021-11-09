@@ -1,4 +1,4 @@
-import { Page } from 'puppeteer-core'
+import { Page } from 'puppeteer'
 
 export interface PageContentToJson {
   pageContentToJson: (params:PageContentToJson.Params) => Promise<PageContentToJson.Result>;

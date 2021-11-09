@@ -1,4 +1,4 @@
-import { Browser, Page } from 'puppeteer-core'
+import { Browser, Page } from 'puppeteer'
 
 export interface GetPage {
   getPage: (params:GetPage.Params) => Promise<GetPage.Result>;
