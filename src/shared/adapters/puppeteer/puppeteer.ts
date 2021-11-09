@@ -1,5 +1,5 @@
 
-import puppeteer from 'puppeteer'
+import puppeteer from 'puppeteer-core'
 
 import { AbstractPuppeteer } from './contracts/abstract-puppeteer'
 import { GetBrowser } from './contracts/get-browser'
