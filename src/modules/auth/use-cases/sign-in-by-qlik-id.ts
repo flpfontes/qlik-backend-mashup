@@ -28,7 +28,7 @@ export class SignInByQlikIdUseCase implements SignInByQlikId {
 
     const { id, email, isAdmin, licenseQlik, name } = user
 
-    const { token } = this.jwtAdapter.create({ id, email })
+    const { token } = this.jwtAdapter.create({ id, isAdmin })
 
     return right({
       user: {

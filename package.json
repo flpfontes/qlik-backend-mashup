@@ -47,6 +47,7 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
-    "puppeteer": "^10.4.0"
+    "puppeteer": "^10.4.0",
+    "slugify": "^1.6.1"
   }
 }

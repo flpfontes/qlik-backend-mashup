@@ -35,7 +35,8 @@ async function getApps (page:Page, spaceId:string):Promise<App[]> {
     id: app.id,
     name: app.name,
     link: app.links.open.href,
-    resourceId: app.resourceId
+    resourceId: app.resourceId,
+    type: 'app'
   }))
 }
 
@@ -52,41 +53,48 @@ async function getSpaces (page:Page): Promise<Space[]> {
   return spaces.map(space => ({
     id: space.id,
     name: space.name,
-    description: space.description
+    description: space.description,
+    link: `https://athenasagricola.us.qlikcloud.com/explore/spaces/${space.id}`
   }))
 }
 
 async function getOjects (browser:Browser, link:string, folderId:string, resourceId:string) {
   const page = await browser.newPage()
 
-  const urlApp = `${link}/sheet/${folderId}`
+  const urlApp = `${link}/sheet/${folderId.split('|')[1]}`
   await page.goto(urlApp)
 
-  console.log('urlApp', urlApp)
+  let objects = []
 
-  await page.waitForSelector('#la-vie-tooltip', { timeout: 70000 })
+  try {
+    await page.waitForSelector('#la-vie-tooltip', { timeout: 300000 })
 
-  const objects = await page.evaluate(async () => {
-    const objectsHTML = document.getElementsByClassName('qv-inner-object')
+    objects = await page.evaluate(async () => {
+      const objectsHTML = document.getElementsByClassName('qv-inner-object')
 
-    return Array.from(objectsHTML).map(object => ({
-      type: object.children[0].innerText,
-      id: String(object.children[0].id).split('_')[0]
-    }))
-  })
-
-  await page.close()
+      return Array.from(objectsHTML).map(object => ({
+        type: object.children[0].innerText,
+        id: String(object.children[0].id).split('_')[0]
+      }))
+    })
+  } catch (error) {
+    console.log('ERROR', urlApp)
+  } finally {
+    await page.close()
+  }
 
   const objectsImages = []
 
   await Promise.all(
     objects.map(async (object) => {
       if (object.id) {
-        const urlObject = `${BASE_URL}/single/?appid=${resourceId}&obj=${object.id}`
         const pageObject = await browser.newPage()
+
+        const urlObject = `${BASE_URL}/single/?appid=${resourceId}&obj=${object.id}`
+
         await pageObject.goto(urlObject)
 
-        await pageObject.waitForSelector('.qv-inner-object', { timeout: 70000 })
+        await pageObject.waitForSelector('.qv-inner-object', { timeout: 300000 })
 
         const base64 = await pageObject.screenshot({ encoding: 'base64' })
 
@@ -95,7 +103,6 @@ async function getOjects (browser:Browser, link:string, folderId:string, resourc
           urlObject,
           imageURL: 'data:image/png;base64,' + base64
         })
-
         await pageObject.close()
       }
     }))
@@ -103,49 +110,65 @@ async function getOjects (browser:Browser, link:string, folderId:string, resourc
   return objectsImages
 }
 
-async function getFolders (browser:Browser, link:string, resourceId:string) {
-  const page = await browser.newPage()
-  await page.goto(link)
-  await page.waitForSelector('.app-details-wrapper', { timeout: 70000 })
+async function getFolders (browser:Browser, apps:App[]) {
+  const folders = await Promise.all(apps.map(async app => {
+    const page = await browser.newPage()
+    await page.goto(app.link)
+    await page.waitForSelector('.app-details-wrapper', { timeout: 300000 })
 
-  const foldersData = await page.evaluate(async () => {
-    const publics = document.getElementById('approved-sheet-section')
+    const foldersData:Folder[] = await page.evaluate(async (app) => {
+      const publics = document.getElementById('approved-sheet-section')
 
-    let folders = []
+      let folders = []
 
-    if (publics) {
-      const publicFolders = publics.getElementsByTagName('li')
+      if (publics) {
+        const publicFolders = publics.getElementsByTagName('li')
 
-      folders = Array.from(publicFolders).map((publicFolder) => ({
-        id: publicFolder.dataset.name,
-        name: publicFolder.innerText
-      }))
+        folders = Array.from(publicFolders).map((publicFolder) => ({
+          id: app.id + '|' + publicFolder.dataset.name,
+          name: publicFolder.innerText,
+          type: 'folder',
+          link: `${app.link}/sheet/${publicFolder.dataset.name}`
+        }))
+      }
+
+      return folders
+    }, app)
+
+    // let foldersObjects = []
+
+    // if (foldersData.length > 0) {
+    //   foldersObjects = await Promise.all(
+    //     foldersData.map(async folder => ({
+    //       ...folder,
+    //       items: await getOjects(browser, app.link, folder.id, app.resourceId)
+    //     }))
+    //   )
+    // }
+
+    await page.close()
+    return {
+      ...app,
+      items: foldersData
     }
+  }))
 
-    return folders
-  }) as Folder[]
-
-  await page.close()
-
-  let foldersObjects = []
-
-  if (foldersData.length > 0) {
-    foldersObjects = await Promise.all(
-      foldersData.map(async folder => ({
-        ...folder,
-        objects: await getOjects(browser, link, folder.id, resourceId)
-      }))
-    )
-  }
-
-  return foldersObjects
+  return folders.filter(fl => fl?.items?.length > 0)
 }
 
-async function getData (link:string) {
-  const browser = await puppeteer.launch({ headless: false })
+async function getData () {
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: [
+      '--no-sandbox',
+      '--headless',
+      '--disable-gpu',
+      '--window-size=1920x1080'
+    ]
+  })
   const page = await browser.newPage()
 
-  await page.goto(link)
+  await page.goto('https://athenasagricola.us.qlikcloud.com/')
   await page.waitForNavigation()
 
   await page.evaluate(async () => {
@@ -159,32 +182,34 @@ async function getData (link:string) {
     btnLogin.click()
   })
 
-  await page.waitForSelector('.explore-content-browser')
+  await page.waitForSelector('#main_page_content')
 
-  const spaceName = await page.evaluate(async () => {
-    return document.getElementsByClassName('space-switcher__selected__name')[0].innerHTML
-  })
+  // const spaceName = await page.evaluate(async () => {
+  //   return document.getElementsByClassName('space-switcher__selected__name')[0].innerHTML
+  // })
 
-  const splitLink = link.split('/')
-  const spaceId = splitLink[splitLink.length - 1]
+  // const splitLink = link.split('/')
+  // const spaceId = splitLink[splitLink.length - 1]
 
-  const apps = await getApps(page, spaceId)
+  const spaces = await getSpaces(page)
+
+  const spacesApps = await Promise.all(spaces.map(async space => ({
+    ...space,
+    type: 'space',
+    items: await getApps(page, space.id)
+  })))
 
   const appsFolders = await Promise.all(
-    apps.map(async (app) => ({
-      ...app,
-      apps: await getFolders(browser, app.link, app.resourceId)
+    spacesApps.map(async (space) => ({
+      ...space,
+      items: await getFolders(browser, space.items)
     }))
   )
 
   await page.close()
   await browser.close()
 
-  return {
-    name: spaceName,
-    link,
-    apps: appsFolders
-  }
+  return appsFolders
 }
 
 export { getData }

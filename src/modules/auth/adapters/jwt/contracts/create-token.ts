@@ -5,7 +5,7 @@ export interface CreateToken {
 export namespace CreateToken {
   export type Params = {
     id: string;
-    email: string;
+    isAdmin: boolean;
   };
 
   export type Result = {

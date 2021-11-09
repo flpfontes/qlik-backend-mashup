@@ -4,10 +4,6 @@ import { AbstractJWT } from './contracts/abstract-jwt'
 import { CheckToken } from './contracts/check-token'
 import { CreateToken } from './contracts/create-token'
 
-interface IPayload {
-  sub: string;
-}
-
 export class JWTAdapter extends AbstractJWT {
   constructor (
     private readonly secretToken: string,
@@ -16,8 +12,10 @@ export class JWTAdapter extends AbstractJWT {
   }
 
   create (params: CreateToken.Params): CreateToken.Result {
-    const token = jwt.sign({}, this.secretToken, {
-      subject: params.id,
+    const token = jwt.sign({
+      id: params.id,
+      isAdmin: params.isAdmin
+    }, this.secretToken, {
       expiresIn: this.expiresIn
     })
 
@@ -26,8 +24,8 @@ export class JWTAdapter extends AbstractJWT {
     }
   }
 
-  check (params: CheckToken.Params): string {
-    const { sub } = jwt.verify(params.token, this.secretToken) as IPayload
-    return sub
+  check (params: CheckToken.Params): CheckToken.Result {
+    const checked = jwt.verify(params.token, this.secretToken) as CheckToken.Result
+    return checked
   }
 }

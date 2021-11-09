@@ -6,9 +6,12 @@ export const adaptMiddleware = (middleware: Middleware) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     const request = {
       accessToken: req.headers.authorization,
+      spaceId: req.headers.spaceid,
+
       ...(req.headers || {}),
 
-      userId: req.userId
+      userId: req.userId,
+      isAdmin: req.isAdmin
     }
     const httpResponse = await middleware.handle(request)
 

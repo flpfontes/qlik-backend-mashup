@@ -4,5 +4,5 @@ import { CreateToken } from './create-token'
 export abstract class AbstractJWT implements CreateToken, CheckToken {
   abstract create(params: CreateToken.Params): CreateToken.Result;
 
-  abstract check(params:CheckToken.Params): string;
+  abstract check(params:CheckToken.Params): CheckToken.Result;
 }
