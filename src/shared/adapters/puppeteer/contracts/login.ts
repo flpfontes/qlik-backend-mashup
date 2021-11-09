@@ -1,4 +1,4 @@
-import { Browser, Page } from 'puppeteer-core'
+import { Browser, Page } from 'puppeteer'
 
 export interface Login {
   login: (params:Login.Params) => Promise<Login.Result>;

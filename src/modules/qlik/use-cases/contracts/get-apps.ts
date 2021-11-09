@@ -1,4 +1,4 @@
-import { Page } from 'puppeteer-core'
+import { Page } from 'puppeteer'
 
 export interface GetApps {
   execute:(params:GetApps.Params) => Promise<GetApps.Result[]>;
