@@ -12,13 +12,7 @@ export class PuppeteerAdapter extends AbstractPuppeteer {
     const browser = await puppeteer.launch({
       headless: true,
       ignoreHTTPSErrors: true,
-      args: [
-        '--no-sandbox',
-        '--headless',
-        '--disable-gpu',
-        '--no-sandbox',
-        '--disable-setuid-sandbox'
-      ]
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
     })
 
     return browser
