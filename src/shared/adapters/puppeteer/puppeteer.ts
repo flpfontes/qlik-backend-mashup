@@ -16,7 +16,6 @@ export class PuppeteerAdapter extends AbstractPuppeteer {
         '--no-sandbox',
         '--headless',
         '--disable-gpu',
-        '--window-size=1920x1080',
         '--no-sandbox',
         '--disable-setuid-sandbox'
       ]
