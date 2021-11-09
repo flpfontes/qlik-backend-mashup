@@ -34,7 +34,7 @@ async function main () {
     }
   })
 
-  const vision = await prisma.vision.create({
+  await prisma.vision.create({
     data: {
       name: 'Fertilidade',
       slug: slugify.generate('Fertilidade'),
