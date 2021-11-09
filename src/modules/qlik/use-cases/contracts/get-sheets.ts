@@ -1,4 +1,4 @@
-import { Browser, Page } from 'puppeteer'
+import { Browser } from 'puppeteer-core'
 
 import { GetApps } from './get-apps'
 
