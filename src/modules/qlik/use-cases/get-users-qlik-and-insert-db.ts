@@ -1,3 +1,4 @@
+import env from '@main/config/env'
 import { UserRepository } from '@modules/user/repository/prisma/user'
 import { AbstractPuppeteer } from '@shared/adapters/puppeteer/contracts/abstract-puppeteer'
 
@@ -15,8 +16,8 @@ export class GetUsersQlikAndInsertDbUseCase implements GetUsersQlikAndInsertDb {
     const browser = await this.puppeteerAdapater.getBrowser()
     const page = await this.puppeteerAdapater.login({ browser })
 
-    const users = await this.puppeteerAdapater.pageContentToJson({ page, link: 'https://athenasagricola.us.qlikcloud.com/api/v1/users' }) as UserQlikModel[]
-    const licenses = await await this.puppeteerAdapater.pageContentToJson({ page, link: 'https://athenasagricola.us.qlikcloud.com/api/v1/licenses/assignments' }) as LicenseQlikModel[]
+    const users = await this.puppeteerAdapater.pageContentToJson({ page, link: `${env.qlikURL}/api/v1/users` }) as UserQlikModel[]
+    const licenses = await await this.puppeteerAdapater.pageContentToJson({ page, link: `${env.qlikURL}/api/v1/licenses/assignments` }) as LicenseQlikModel[]
 
     await page.close()
     await browser.close()

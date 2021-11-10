@@ -1,4 +1,5 @@
 
+import env from '@main/config/env'
 import puppeteer from 'puppeteer'
 
 import { AbstractPuppeteer } from './contracts/abstract-puppeteer'
@@ -32,21 +33,21 @@ export class PuppeteerAdapter extends AbstractPuppeteer {
 
     const page = await this.getPage({ browser })
 
-    await page.goto(url || 'https://athenasagricola.us.qlikcloud.com')
+    await page.goto(url || env.qlikURL)
     await page.waitForNavigation()
 
-    await page.evaluate(async () => {
+    await page.evaluate(async (env) => {
       const email = document.getElementById('email')
       // @ts-ignore
-      email.value = 'felipe@athenasagricola.com.br'
+      email.value = env.qlikLogin
 
       const password = document.getElementById('password')
       // @ts-ignore
-      password.value = '@n@liz5Verru20qlik'
+      password.value = env.qlikPassword
 
       const btnLogin = document.getElementById('btn-login')
       btnLogin.click()
-    })
+    }, env)
 
     await page.waitForSelector('.custom-home', { timeout: 70000 })
 

@@ -1,4 +1,5 @@
 
+import env from '@main/config/env'
 import { AbstractPuppeteer } from '@shared/adapters/puppeteer/contracts/abstract-puppeteer'
 
 import { GetSheets } from './contracts/get-sheets'
@@ -19,7 +20,7 @@ export class GetSheetsUseCase implements GetSheets {
     const sheets = await Promise.all(apps.map(async app => {
       const page = await this.puppeteerAdapater.getPage({ browser })
 
-      const link = `https://athenasagricola.us.qlikcloud.com/sense/app/${app.resourceId}`
+      const link = `${env.qlikURL}/sense/app/${app.resourceId}`
       await page.goto(link)
 
       try {

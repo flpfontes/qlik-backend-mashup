@@ -1,3 +1,4 @@
+import env from '@main/config/env'
 import { AbstractPuppeteer } from '@shared/adapters/puppeteer/contracts/abstract-puppeteer'
 
 import { GetObjects } from './contracts/get-objects'
@@ -33,7 +34,7 @@ export class GetObjectsUseCase implements GetObjects {
       objects.map(async (object) => {
         if (object.id) {
           const pageObject = await this.puppeteerAdapater.getPage({ browser })
-          const objectURL = `https://athenasagricola.us.qlikcloud.com/single/?appid=${resourceId}&obj=${object.id}`
+          const objectURL = `${env.qlikURL}/single/?appid=${resourceId}&obj=${object.id}`
 
           try {
             await pageObject.goto(objectURL)
