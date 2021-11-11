@@ -77,6 +77,8 @@ model Panel {
   vision   Vision @relation(fields: [visionId], references: [id])
   visionId String @map("vision_id")
 
+  isFull Boolean @default(false) @map("is_full")
+
 
   @@map("panel")
 }
