@@ -35,7 +35,8 @@ export class PanelRepository implements GetPanelByVisionIdRepository, DeletePane
         data: {
           name: panel.name,
           url: panel.url,
-          visionId: visionId
+          visionId: visionId,
+          isFull: panel.isFull
         }
       })
     )
