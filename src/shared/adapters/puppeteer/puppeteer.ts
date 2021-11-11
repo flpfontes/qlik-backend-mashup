@@ -49,7 +49,7 @@ export class PuppeteerAdapter extends AbstractPuppeteer {
       btnLogin.click()
     }, env)
 
-    await page.waitForSelector('.custom-home', { timeout: 70000 })
+    await page.waitForSelector('.custom-home', { timeout: 300000 })
 
     return page
   }
