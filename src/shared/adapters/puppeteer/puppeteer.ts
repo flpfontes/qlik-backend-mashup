@@ -13,7 +13,13 @@ export class PuppeteerAdapter extends AbstractPuppeteer {
     const browser = await puppeteer.launch({
       headless: true,
       ignoreHTTPSErrors: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--use-gl=egl', '--disable-dev-shm-usage']
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--use-gl=egl',
+        '--disable-dev-shm-usage',
+        '--shm-size=3gb'
+      ]
     })
 
     return browser
