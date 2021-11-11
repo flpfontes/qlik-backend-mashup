@@ -49,7 +49,6 @@ export class GetObjectsUseCase implements GetObjects {
               imageURL: 'data:image/png;base64,' + base64
             }
           } catch (error) {
-            console.log('ERROR APP ', objectURL)
             return null
           } finally {
             await pageObject.close()

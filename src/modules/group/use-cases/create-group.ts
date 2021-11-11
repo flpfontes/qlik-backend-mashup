@@ -18,7 +18,6 @@ export class CreateGroupUseCase implements CreateGroup {
 
     const groupExist = await this.groupRepository.getBySlugAndSpaceId({ slug, spaceId })
 
-    console.log('groupExist', groupExist)
 
     if (!groupExist) {
       const group = await this.groupRepository.create({ name, slug, spaceId })
