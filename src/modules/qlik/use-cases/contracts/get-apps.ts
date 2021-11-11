@@ -15,5 +15,6 @@ export namespace GetApps {
     name:string;
     link:string;
     resourceId:string;
+    iframe:string
   };
 }

@@ -17,7 +17,7 @@ export class GetSheetsUseCase implements GetSheets {
   async execute (params: GetSheets.Params): Promise<GetSheets.Result[]> {
     const { browser, apps } = params
 
-    const sheets = await Promise.all(apps.map(async app => {
+    const sheetsItems = await Promise.all(apps.map(async app => {
       const page = await this.puppeteerAdapater.getPage({ browser })
 
       const link = `${env.qlikURL}/sense/app/${app.resourceId}`
@@ -51,7 +51,8 @@ export class GetSheetsUseCase implements GetSheets {
             ...sheet,
             id: app.resourceId + '|' + sheet.id,
             type: 'folder',
-            link: `${link}/sheet/${sheet.id}`
+            link: `${link}/sheet/${sheet.id}`,
+            iframe: `${env.qlikURL}/single/?appid=${app.resourceId}&sheet=${sheet.id}`
           }))
         }
       } catch (error) {
@@ -61,6 +62,6 @@ export class GetSheetsUseCase implements GetSheets {
       }
     }))
 
-    return sheets.filter(sheet => Boolean(sheet) && Boolean(sheet.items))
+    return sheetsItems.filter(sheet => Boolean(sheet) && Boolean(sheet.items))
   }
 }
