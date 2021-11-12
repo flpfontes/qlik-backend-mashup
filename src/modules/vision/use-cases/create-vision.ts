@@ -25,7 +25,7 @@ export class CreateVisionUseCase implements CreateVision {
     }
 
     const vision = await this.visionRepository.create({ groupId, name, slug })
-    await this.userVisionRepository.relateUserVision({ visionId: vision.id, userId: userId })
+    await this.userVisionRepository.associateUserVision({ visionId: vision.id, userId: userId })
 
     return right(vision)
   }
