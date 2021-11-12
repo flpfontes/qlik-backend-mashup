@@ -40,7 +40,7 @@ export class UserVisionRepository implements GetRelatedUsersByVisonIdRepository,
     const { visionId } = params
 
     const userVisions = await prisma.$queryRawUnsafe<GetRelatedUsersByVisonIdRepository.Result>(
-      `SELECT U.id as user_id, u.name as user_name, v.id as vision_id FROM user_panel UP
+      `SELECT U.id as user_id, u.name as user_name, v.id as vision_id FROM user_vision UP
         FULL OUTER JOIN vision V
           ON UP.vision_id = v.id
         FULL OUTER JOIN "user" U
