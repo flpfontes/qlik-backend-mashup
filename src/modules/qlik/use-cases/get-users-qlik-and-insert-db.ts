@@ -32,7 +32,7 @@ export class GetUsersQlikAndInsertDbUseCase implements GetUsersQlikAndInsertDb {
         if (!userExist) {
           user = await this.userRepository.create({
             isAdmin: false,
-            email: userQlik.email,
+            email: userQlik.email || userQlik.name,
             idQlik: userQlik.id,
             name: userQlik.name,
             licenseQlik: license ? license.type : null
