@@ -93,5 +93,5 @@ model UserVision {
   visionId String @map("vision_id")
 
 
-  @@map("user_panel")
+  @@map("user_vision")
 }
