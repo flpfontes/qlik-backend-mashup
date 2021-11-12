@@ -8,6 +8,7 @@ export interface CreateVision {
 
 export namespace CreateVision {
   export type Params = {
+    userId:string;
     name:string;
     groupId: string;
   }

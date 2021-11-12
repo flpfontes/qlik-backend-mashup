@@ -1,3 +1,4 @@
+import { UserVisionRepository } from '@modules/user-vision/repository/prisma/user-vision'
 import { makeSlugifyAdapter } from '@shared/factories/make-slugify-adapter'
 import { Controller } from '@shared/presentation/protocols/controller'
 
@@ -8,8 +9,10 @@ import { makeCreateVisionValidation } from './make-create-vision-validation'
 
 export const makeCreateVisionController = (): Controller => {
   const visionRepository = new VisionRepository()
+  const userVisionRepository = new UserVisionRepository()
+
   const slugAdapter = makeSlugifyAdapter()
-  const createVisionUseCase = new CreateVisionUseCase(visionRepository, slugAdapter)
+  const createVisionUseCase = new CreateVisionUseCase(visionRepository, userVisionRepository, slugAdapter)
 
   const validations = makeCreateVisionValidation()
   const controller = new CreateVisionController(validations, createVisionUseCase)

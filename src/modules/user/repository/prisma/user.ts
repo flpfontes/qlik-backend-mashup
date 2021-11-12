@@ -5,7 +5,7 @@ import { GetAllUsersRepository } from '../contracts/get-all-user'
 import { GetUserByIdQlikRepository } from '../contracts/get-user-by-id-qlik'
 import { UpdateUserByIdRepository } from '../contracts/update-user-by-id'
 
-export class UserRepository implements GetUserByIdQlikRepository, GetAllUsersRepository, CreateUserRepository, UpdateUserByIdRepository {
+export class UserRepository implements GetUserByIdQlikRepository, GetAllUsersRepository, CreateUserRepository {
   async getByIdQlik (params: GetUserByIdQlikRepository.Params): Promise<GetUserByIdQlikRepository.Result> {
     const { idQlik } = params
 

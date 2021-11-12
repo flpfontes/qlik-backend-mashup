@@ -17,16 +17,15 @@ export class CreateVisionController implements Controller {
   ) {}
 
   async handle (request: CreateVision.Params): Promise<HttpResponse> {
-    console.log('request', request)
     try {
       const error = this.validation.validate(request)
       if (error) {
         return badRequest(error)
       }
 
-      const { groupId, name } = request
+      const { groupId, name, userId } = request
 
-      const visionOrError = await this.createVisionUseCase.execute({ groupId, name })
+      const visionOrError = await this.createVisionUseCase.execute({ groupId, name, userId })
 
       if (visionOrError.isLeft()) {
         return forbidden(visionOrError.value)

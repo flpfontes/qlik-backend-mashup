@@ -7,11 +7,11 @@ export const adaptMiddleware = (middleware: Middleware) => {
     const request = {
       accessToken: req.headers.authorization,
       spaceId: req.headers.spaceid,
-
-      ...(req.headers || {}),
-
       userId: req.userId,
-      isAdmin: req.isAdmin
+      isAdmin: req.isAdmin,
+
+      ...(req.headers || {})
+
     }
     const httpResponse = await middleware.handle(request)
 
