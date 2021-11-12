@@ -26,6 +26,9 @@ export class SpaceRepository implements CreateSpaceRepository, GetSpaceBySlugRep
     const space = await prisma.space.findFirst({
       where: {
         slug
+      },
+      orderBy: {
+        name: 'asc'
       }
     })
 
@@ -50,6 +53,9 @@ export class SpaceRepository implements CreateSpaceRepository, GetSpaceBySlugRep
             }
           }
         }
+      },
+      orderBy: {
+        name: 'asc'
       }
     })
 
@@ -57,7 +63,11 @@ export class SpaceRepository implements CreateSpaceRepository, GetSpaceBySlugRep
   }
 
   async getSpaces ():Promise<GetAllSpacesRepository.Result> {
-    const spaces = await prisma.space.findMany()
+    const spaces = await prisma.space.findMany({
+      orderBy: {
+        name: 'asc'
+      }
+    })
 
     return spaces
   }

@@ -31,6 +31,9 @@ export class GroupRepository implements CreateGroupRespository, GetGroupBySlugAn
       where: {
         slug,
         spaceId
+      },
+      orderBy: {
+        name: 'asc'
       }
     })
 
@@ -46,6 +49,9 @@ export class GroupRepository implements CreateGroupRespository, GetGroupBySlugAn
       include: {
         space: false,
         visions: true
+      },
+      orderBy: {
+        name: 'asc'
       }
     })
 
@@ -73,6 +79,9 @@ export class GroupRepository implements CreateGroupRespository, GetGroupBySlugAn
             }
           }
         }
+      },
+      orderBy: {
+        name: 'asc'
       }
     })
 

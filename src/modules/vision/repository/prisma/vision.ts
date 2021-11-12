@@ -43,6 +43,9 @@ export class VisionRepository implements UpdateLayoutByVisionIdRepository, Creat
     const vision = await prisma.vision.findFirst({
       where: {
         slug
+      },
+      orderBy: {
+        name: 'asc'
       }
     })
     return vision
