@@ -18,7 +18,7 @@ export class CreateVisionUseCase implements CreateVision {
 
     const slug = this.slugAdapter.generate(name)
 
-    const visionExist = await this.visionRepository.getBySlug({ slug })
+    const visionExist = await this.visionRepository.getBySlugAndGroupId({ slug, groupId })
 
     if (visionExist) {
       return left(new VisionAlreadyExistError())

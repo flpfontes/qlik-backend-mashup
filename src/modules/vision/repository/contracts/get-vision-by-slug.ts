@@ -1,11 +1,12 @@
 import { VisionModel } from '../model/vision'
 
 export interface GetVisionBySlugRepository {
-  getBySlug: (params: GetVisionBySlugRepository.Params) => Promise<GetVisionBySlugRepository.Result>;
+  getBySlugAndGroupId: (params: GetVisionBySlugRepository.Params) => Promise<GetVisionBySlugRepository.Result>;
 }
 
 export namespace GetVisionBySlugRepository {
   export type Params = {
+    groupId:string
     slug:string
   }
   export type Result = VisionModel

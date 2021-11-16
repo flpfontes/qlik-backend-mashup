@@ -38,11 +38,12 @@ export class VisionRepository implements UpdateLayoutByVisionIdRepository, Creat
     return vision
   }
 
-  async getBySlug (params:GetVisionBySlugRepository.Params): Promise<GetVisionBySlugRepository.Result> {
-    const { slug } = params
+  async getBySlugAndGroupId (params:GetVisionBySlugRepository.Params): Promise<GetVisionBySlugRepository.Result> {
+    const { slug, groupId } = params
     const vision = await prisma.vision.findFirst({
       where: {
-        slug
+        slug,
+        groupId
       },
       orderBy: {
         name: 'asc'
