@@ -65,7 +65,7 @@ export class GroupRepository implements CreateGroupRespository, GetGroupBySlugAn
       where: {
         spaceId,
         visions: {
-          every: {
+          some: {
             panel: {
               some: {
                 vision: {
@@ -82,6 +82,10 @@ export class GroupRepository implements CreateGroupRespository, GetGroupBySlugAn
       },
       orderBy: {
         name: 'asc'
+      },
+      include: {
+        space: false,
+        visions: true
       }
     })
 
