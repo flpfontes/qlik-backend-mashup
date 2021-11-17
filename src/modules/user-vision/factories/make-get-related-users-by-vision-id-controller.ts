@@ -1,3 +1,4 @@
+import { UserRepository } from '@modules/user/repository/prisma/user'
 import { Controller } from '@shared/presentation/protocols/controller'
 
 import { GetRelatedUsersByVisionIdController } from '../presentation/controllers/get-related-users-by-vision-id'
@@ -6,7 +7,9 @@ import { GetRelatedUsersByVisionIdUseCase } from '../use-cases/get-related-users
 
 export const makeGetRelatedUsersByVisionIdController = (): Controller => {
   const userVisionRepository = new UserVisionRepository()
-  const getRelatedUsersByVisionIdUseCase = new GetRelatedUsersByVisionIdUseCase(userVisionRepository)
+  const userRepository = new UserRepository()
+
+  const getRelatedUsersByVisionIdUseCase = new GetRelatedUsersByVisionIdUseCase(userVisionRepository, userRepository)
   const controller = new GetRelatedUsersByVisionIdController(getRelatedUsersByVisionIdUseCase)
   return controller
 }

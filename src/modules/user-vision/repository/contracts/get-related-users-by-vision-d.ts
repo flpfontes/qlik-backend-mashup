@@ -1,4 +1,5 @@
-/* eslint-disable camelcase */
+
+import { UserVision } from '.prisma/client'
 
 export interface GetRelatedUsersByVisonIdRepository {
   relatedUsersByVisonId: (params: GetRelatedUsersByVisonIdRepository.Params) => Promise<GetRelatedUsersByVisonIdRepository.Result>;
@@ -9,9 +10,5 @@ export namespace GetRelatedUsersByVisonIdRepository {
     visionId:string
   }
 
-  export type Result = {
-    user_id:string;
-    user_name:string;
-    vision_id:string;
-  }[];
+  export type Result = UserVision[]
 }

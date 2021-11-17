@@ -39,13 +39,11 @@ export class UserVisionRepository implements GetRelatedUsersByVisonIdRepository,
   async relatedUsersByVisonId (params:GetRelatedUsersByVisonIdRepository.Params):Promise<GetRelatedUsersByVisonIdRepository.Result> {
     const { visionId } = params
 
-    const userVisions = await prisma.$queryRawUnsafe<GetRelatedUsersByVisonIdRepository.Result>(
-      `SELECT U.id as user_id, u.name as user_name, v.id as vision_id FROM user_vision UP
-        FULL OUTER JOIN vision V
-          ON UP.vision_id = v.id
-        FULL OUTER JOIN "user" U
-          ON UP.user_id = U.id
-        WHERE UP.vision_id = $1 or UP.vision_id is null`, visionId)
+    const userVisions = await prisma.userVision.findMany({
+      where: {
+        visionId
+      }
+    })
 
     return userVisions
   }

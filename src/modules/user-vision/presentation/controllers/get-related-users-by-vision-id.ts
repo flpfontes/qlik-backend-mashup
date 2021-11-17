@@ -23,11 +23,7 @@ export class GetRelatedUsersByVisionIdController implements Controller {
 
       const usersVisions = await this.getRelatedUsersByVisionIdUseCase.execute({ visionId })
 
-      return ok(usersVisions.map(userVision => ({
-        userId: userVision.user_id,
-        userName: userVision.user_name,
-        visionId: userVision.vision_id
-      })))
+      return ok(usersVisions)
     } catch (error) {
       return serverError(error)
     }

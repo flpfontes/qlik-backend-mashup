@@ -9,8 +9,8 @@ export namespace GetRelatedUsersByVisionId {
     visionId: string;
   };
   export type Result = {
-    user_id:string;
-    user_name:string;
-    vision_id:string;
-  }[];
+    userId: string;
+    userName: string;
+    visionId: string;
+}[]
 }
