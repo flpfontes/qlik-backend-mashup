@@ -72,7 +72,7 @@ model Panel {
   id   String @id @default(uuid())
   name String
 
-  url String @unique
+  url String
 
   vision   Vision @relation(fields: [visionId], references: [id])
   visionId String @map("vision_id")
