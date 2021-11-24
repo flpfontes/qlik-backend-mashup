@@ -64,9 +64,25 @@ export class PuppeteerAdapter extends AbstractPuppeteer {
     const { page, link: url } = params
 
     const content = await page.evaluate(async (url:string) => {
-      // eslint-disable-next-line no-undef
-      const response = await fetch(url)
-      const { data } = await response.json()
+      let data = null
+
+      while (true) {
+        // eslint-disable-next-line no-undef
+        const response = await fetch(url)
+        const json = await response.json()
+
+        if (data) {
+          data = [...data, ...json.data]
+        } else {
+          data = json.data
+        }
+        if (json?.links?.next?.href) {
+          url = json?.links?.next?.href
+        } else {
+          break
+        }
+      }
+
       return Array.from(data)
     }, url)
 
