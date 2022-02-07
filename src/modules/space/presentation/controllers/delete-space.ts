@@ -10,7 +10,7 @@ type Request = {
   id:string
 }
 
-export class DeletepaceController implements Controller {
+export class DeleteSpaceController implements Controller {
   constructor (
     private readonly spaceRepository: SpaceRepository
   ) {}
