@@ -2,7 +2,7 @@ import { makeSlugifyAdapter } from '@shared/factories/make-slugify-adapter'
 import { Controller } from '@shared/presentation/protocols/controller'
 
 import { CreateGroupController } from '../presentation/controllers/create-group'
-import { GroupRepository } from '../repository/prisma/space'
+import { GroupRepository } from '../repository/prisma/group'
 import { CreateGroupUseCase } from '../use-cases/create-group'
 import { makeCreateGroupValidation } from './make-create-group-validation'
 
