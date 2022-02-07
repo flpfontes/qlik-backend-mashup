@@ -1,13 +1,14 @@
 import { prisma } from '@shared/infra/prisma/prisma'
 
 import { CreateSpaceRepository } from '../contracts/create-space'
+import { DeleteSpaceRepository } from '../contracts/delete-space'
 import { EditSpaceRepository } from '../contracts/edit-space'
 import { GetAllSpacesRepository } from '../contracts/get-all-spaces'
 import { GetSpaceByIdRepository } from '../contracts/get-space-by-id'
 import { GetSpaceBySlugRepository } from '../contracts/get-space-by-slug'
 import { GetSpacesByUserIdRepository } from '../contracts/get-spaces-by-user-id'
 
-export class SpaceRepository implements CreateSpaceRepository, GetSpaceBySlugRepository, GetSpacesByUserIdRepository, GetAllSpacesRepository, GetSpaceByIdRepository, EditSpaceRepository {
+export class SpaceRepository implements CreateSpaceRepository, GetSpaceBySlugRepository, GetSpacesByUserIdRepository, GetAllSpacesRepository, GetSpaceByIdRepository, EditSpaceRepository, DeleteSpaceRepository {
   async create (params: CreateSpaceRepository.Params): Promise<CreateSpaceRepository.Result> {
     const { name, slug } = params
 
@@ -98,5 +99,15 @@ export class SpaceRepository implements CreateSpaceRepository, GetSpaceBySlugRep
     })
 
     return space
+  }
+
+  async delete (params: DeleteSpaceRepository.Params): Promise<DeleteSpaceRepository.Result> {
+    const { id } = params
+
+    await prisma.space.delete({
+      where: {
+        id
+      }
+    })
   }
 }
