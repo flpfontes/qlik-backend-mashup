@@ -2,7 +2,7 @@ import { AbstractSlugify } from '@shared/adapters/slug/contracts/abstract-slugif
 import { left, right } from '@shared/presentation/errors/either'
 
 import { GroupAlreadyExistInsideSpace } from '../presentation/errors/group-already-exist-in-space'
-import { GroupRepository } from '../repository/prisma/space'
+import { GroupRepository } from '../repository/prisma/group'
 import { EditGroup } from './contracts/edit-group'
 
 export class EditGroupUseCase implements EditGroup {
