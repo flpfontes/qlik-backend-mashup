@@ -1,11 +1,12 @@
 import { prisma } from '@shared/infra/prisma/prisma'
 
 import { CreateGroupRespository } from '../contracts/create-group'
+import { EditGroupRespository } from '../contracts/edit-group'
 import { GetGroupBySlugAndSpaceIdRepository } from '../contracts/get-group-by-slug-and-space-id'
 import { GetGroupsBySpaceIdRepository } from '../contracts/get-groups-by-space-id'
 import { GetGroupsByUserIdAndSpaceIdRepository } from '../contracts/get-groups-by-user-id-and-space-id'
 
-export class GroupRepository implements CreateGroupRespository, GetGroupBySlugAndSpaceIdRepository, GetGroupsBySpaceIdRepository, GetGroupsByUserIdAndSpaceIdRepository {
+export class GroupRepository implements CreateGroupRespository, GetGroupBySlugAndSpaceIdRepository, GetGroupsBySpaceIdRepository, GetGroupsByUserIdAndSpaceIdRepository, EditGroupRespository {
   async create (params: CreateGroupRespository.Params): Promise<CreateGroupRespository.Result> {
     const { name, slug, spaceId } = params
 
@@ -90,5 +91,21 @@ export class GroupRepository implements CreateGroupRespository, GetGroupBySlugAn
     })
 
     return groups
+  }
+
+  async edit (params: EditGroupRespository.Params) : Promise<EditGroupRespository.Result> {
+    const { id, name, slug } = params
+
+    const group = await prisma.group.update({
+      where: {
+        id
+      },
+      data: {
+        slug,
+        name
+      }
+    })
+
+    return group
   }
 }
