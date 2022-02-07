@@ -1,12 +1,13 @@
 import { prisma } from '@shared/infra/prisma/prisma'
 
 import { CreateSpaceRepository } from '../contracts/create-space'
+import { EditSpaceRepository } from '../contracts/edit-space'
 import { GetAllSpacesRepository } from '../contracts/get-all-spaces'
 import { GetSpaceByIdRepository } from '../contracts/get-space-by-id'
 import { GetSpaceBySlugRepository } from '../contracts/get-space-by-slug'
 import { GetSpacesByUserIdRepository } from '../contracts/get-spaces-by-user-id'
 
-export class SpaceRepository implements CreateSpaceRepository, GetSpaceBySlugRepository, GetSpacesByUserIdRepository, GetAllSpacesRepository, GetSpaceByIdRepository {
+export class SpaceRepository implements CreateSpaceRepository, GetSpaceBySlugRepository, GetSpacesByUserIdRepository, GetAllSpacesRepository, GetSpaceByIdRepository, EditSpaceRepository {
   async create (params: CreateSpaceRepository.Params): Promise<CreateSpaceRepository.Result> {
     const { name, slug } = params
 
@@ -77,6 +78,22 @@ export class SpaceRepository implements CreateSpaceRepository, GetSpaceBySlugRep
     const space = await prisma.space.findUnique({
       where: {
         id: spaceId
+      }
+    })
+
+    return space
+  }
+
+  async edit (params: EditSpaceRepository.Params): Promise<EditSpaceRepository.Result> {
+    const { id, name, slug } = params
+
+    const space = await prisma.space.update({
+      where: {
+        id
+      },
+      data: {
+        name,
+        slug
       }
     })
 
