@@ -109,4 +109,14 @@ export class GroupRepository implements CreateGroupRespository, GetGroupBySlugAn
 
     return group
   }
+
+  async delete (params: DeleteGroupRespository.Params): Promise<DeleteGroupRespository.Result> {
+    const { id } = params
+
+    await prisma.group.delete({
+      where: {
+        id
+      }
+    })
+  }
 }
