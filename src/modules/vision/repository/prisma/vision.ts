@@ -1,10 +1,11 @@
 import { prisma } from '@shared/infra/prisma/prisma'
 
 import { CreateVisionRepository } from '../contracts/create-vision'
+import { GetVisionByIdRepository } from '../contracts/get-vision-by-id'
 import { GetVisionBySlugRepository } from '../contracts/get-vision-by-slug'
 import { UpdateLayoutByVisionIdRepository } from '../contracts/update-layout-by-vision-id'
 
-export class VisionRepository implements UpdateLayoutByVisionIdRepository, CreateVisionRepository, GetVisionBySlugRepository {
+export class VisionRepository implements UpdateLayoutByVisionIdRepository, CreateVisionRepository, GetVisionBySlugRepository, GetVisionByIdRepository {
   async updateLayoutByVisionId (params: UpdateLayoutByVisionIdRepository.Params): Promise<UpdateLayoutByVisionIdRepository.Result> {
     const { id, layout } = params
 
@@ -49,6 +50,18 @@ export class VisionRepository implements UpdateLayoutByVisionIdRepository, Creat
         name: 'asc'
       }
     })
+    return vision
+  }
+
+  async getById (params: GetVisionByIdRepository.Params):Promise<GetVisionByIdRepository.Result> {
+    const { visionId } = params
+
+    const vision = await prisma.vision.findUnique({
+      where: {
+        id: visionId
+      }
+    })
+
     return vision
   }
 }
