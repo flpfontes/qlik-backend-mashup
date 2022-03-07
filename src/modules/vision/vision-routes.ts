@@ -11,5 +11,5 @@ import { makeUpdateLayoutByVisionIdController } from './factories/make-update-la
 export default (router: Router): void => {
   router.put('/vision/:id', [auth, space], adaptRoute(makeUpdateLayoutByVisionIdController()))
   router.post('/vision', [auth, space, isAdmin], adaptRoute(makeCreateVisionController()))
-  router.get('/vision/:visionId', [auth, space, isAdmin], adaptRoute(makeGetVisionController()))
+  router.get('/vision/:visionId', [auth, space], adaptRoute(makeGetVisionController()))
 }
