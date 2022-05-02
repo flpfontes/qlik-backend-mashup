@@ -40,7 +40,7 @@ export class PuppeteerAdapter extends AbstractPuppeteer {
     const page = await this.getPage({ browser })
 
     await page.goto(url || env.qlikURL)
-    await page.waitForNavigation()
+    await page.waitForSelector('.login-box')
 
     await page.evaluate(async (env) => {
       const email = document.getElementById('email')
@@ -51,11 +51,13 @@ export class PuppeteerAdapter extends AbstractPuppeteer {
       // @ts-ignore
       password.value = env.qlikPassword
 
+      await new Promise(r => setTimeout(r, 2000))
+
       const btnLogin = document.getElementById('btn-login')
       btnLogin.click()
     }, env)
 
-    await page.waitForSelector('.custom-home', { timeout: 300000 })
+    await page.waitForSelector('#home-title')
 
     return page
   }
@@ -70,6 +72,7 @@ export class PuppeteerAdapter extends AbstractPuppeteer {
         // eslint-disable-next-line no-undef
         const response = await fetch(url)
         const json = await response.json()
+        console.log({ json })
 
         if (data) {
           data = [...data, ...json.data]
