@@ -43,7 +43,7 @@ export class GetUsersQlikAndInsertDbUseCase implements GetUsersQlikAndInsertDb {
 
         user = await this.userRepository.update({
           id: userExist.id,
-          email: userQlik.email,
+          email: userQlik.email || userQlik.name,
           idQlik: userQlik.id,
           name: userQlik.name,
           licenseQlik: license ? license.type : null,
