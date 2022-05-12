@@ -1,0 +1,48 @@
+version: '3.4'
+
+services:
+
+  postgres:
+    image: postgres
+    restart: always
+    container_name: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - pg-data-qlik:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  app:
+    image: backend-qlik
+    build: .
+    container_name: qlik-backend
+    restart: always
+    command: sh -c "npx prisma migrate deploy && npx prisma generate && yarn dev"
+    ports:
+      - ${PORT}:${PORT}
+    environment:
+      
+      POSTGRES_HOST: postgres
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/qlik?connect_timeout=300"
+      
+      PORT: ${PORT}
+      SECRET_TOKEN: ${SECRET_TOKEN}
+      EXPIRES_TOKEN: ${EXPIRES_TOKEN}
+
+      QLIK_URL: ${QLIK_URL}
+      QLIK_LOGIN: ${QLIK_LOGIN}
+      QLIK_PASSWORD: ${QLIK_PASSWORD}
+      
+    volumes:
+      - .:/var/app/qlik/
+      - node_modules:/var/app/qlik/node_modules
+    links:
+      - postgres
+    depends_on:
+      - postgres
+
+volumes:
+  node_modules: {}
+  pg-data-qlik:
+    driver: local
