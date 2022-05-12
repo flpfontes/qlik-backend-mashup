@@ -11,6 +11,7 @@ import { PageContentToJson } from './contracts/page-content-to-json'
 export class PuppeteerAdapter extends AbstractPuppeteer {
   async getBrowser (): Promise<GetBrowser.Result> {
     const browser = await puppeteer.launch({
+      executablePath: '/usr/bin/google-chrome',
       headless: true,
       ignoreHTTPSErrors: true,
       args: [
@@ -51,6 +52,7 @@ export class PuppeteerAdapter extends AbstractPuppeteer {
       // @ts-ignore
       password.value = env.qlikPassword
 
+      // eslint-disable-next-line promise/param-names
       await new Promise(r => setTimeout(r, 2000))
 
       const btnLogin = document.getElementById('btn-login')
