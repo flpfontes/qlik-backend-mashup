@@ -17,7 +17,7 @@ export class GetUsersQlikAndInsertDbUseCase implements GetUsersQlikAndInsertDb {
     const page = await this.puppeteerAdapater.login({ browser })
 
     const users = await this.puppeteerAdapater.pageContentToJson({ page, link: `${env.qlikURL}/api/v1/users` }) as UserQlikModel[]
-    const licenses = await await this.puppeteerAdapater.pageContentToJson({ page, link: `${env.qlikURL}/api/v1/licenses/assignments` }) as LicenseQlikModel[]
+    const licenses = await this.puppeteerAdapater.pageContentToJson({ page, link: `${env.qlikURL}/api/v1/licenses/assignments` }) as LicenseQlikModel[]
 
     await page.close()
     await browser.close()
