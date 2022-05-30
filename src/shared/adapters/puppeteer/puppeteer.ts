@@ -19,7 +19,8 @@ export class PuppeteerAdapter extends AbstractPuppeteer {
         '--disable-setuid-sandbox',
         '--use-gl=egl',
         '--disable-dev-shm-usage',
-        '--shm-size=3gb'
+        '--shm-size=3gb',
+        '--disable-dev-shm-usage'
       ]
     })
 
