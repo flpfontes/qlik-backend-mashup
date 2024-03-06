@@ -1,15 +1,14 @@
+import env from '@main/config/env';
+import puppeteer from 'puppeteer';
 
-import env from '@main/config/env'
-import puppeteer from 'puppeteer'
-
-import { AbstractPuppeteer } from './contracts/abstract-puppeteer'
-import { GetBrowser } from './contracts/get-browser'
-import { GetPage } from './contracts/get-page'
-import { Login } from './contracts/login'
-import { PageContentToJson } from './contracts/page-content-to-json'
+import { AbstractPuppeteer } from './contracts/abstract-puppeteer';
+import { GetBrowser } from './contracts/get-browser';
+import { GetPage } from './contracts/get-page';
+import { Login } from './contracts/login';
+import { PageContentToJson } from './contracts/page-content-to-json';
 
 export class PuppeteerAdapter extends AbstractPuppeteer {
-  async getBrowser (): Promise<GetBrowser.Result> {
+  async getBrowser(): Promise<GetBrowser.Result> {
     const browser = await puppeteer.launch({
       executablePath: '/usr/bin/google-chrome',
       headless: true,
@@ -20,78 +19,82 @@ export class PuppeteerAdapter extends AbstractPuppeteer {
         '--use-gl=egl',
         '--disable-dev-shm-usage',
         '--shm-size=2gb',
-        '--disable-dev-shm-usage'
-      ]
-    })
+        '--disable-dev-shm-usage',
+      ],
+    });
 
-    return browser
+    return browser;
   }
 
-  async getPage (params: GetPage.Params): Promise<GetPage.Result> {
-    const { browser } = params
+  async getPage(params: GetPage.Params): Promise<GetPage.Result> {
+    const { browser } = params;
 
-    const page = await browser.newPage()
-    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3419.0 Safari/537.36')
+    const page = await browser.newPage();
+    await page.setUserAgent(
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3419.0 Safari/537.36',
+    );
 
-    return page
+    return page;
   }
 
-  async login (params:Login.Params): Promise<Login.Result> {
-    const { browser, url } = params
+  async login(params: Login.Params): Promise<Login.Result> {
+    const { browser, url } = params;
 
-    const page = await this.getPage({ browser })
+    const page = await this.getPage({ browser });
 
-    await page.goto(url || env.qlikURL)
-    await page.waitForSelector('.login-box')
+    await page.goto(url || env.qlikURL);
+    await page.waitForSelector('.login-box', { timeout: 60000 });
 
     await page.evaluate(async (env) => {
-      const email = document.getElementById('email')
+      const email = document.getElementById('email');
       // @ts-ignore
-      email.value = env.qlikLogin
+      email.value = env.qlikLogin;
 
-      const password = document.getElementById('password')
+      const password = document.getElementById('password');
       // @ts-ignore
-      password.value = env.qlikPassword
+      password.value = env.qlikPassword;
 
       // eslint-disable-next-line promise/param-names
-      await new Promise(r => setTimeout(r, 2000))
+      await new Promise((r) => setTimeout(r, 2000));
 
-      const btnLogin = document.getElementById('btn-login')
-      btnLogin.click()
-    }, env)
+      const btnLogin = document.getElementById('btn-login');
+      btnLogin.click();
+    }, env);
 
-    await page.waitForSelector('#home-title')
+    await page.waitForSelector('#home-title');
 
-    return page
+    return page;
   }
 
-  async pageContentToJson (params: PageContentToJson.Params): Promise<PageContentToJson.Result> {
-    const { page, link: url } = params
+  async pageContentToJson(
+    params: PageContentToJson.Params,
+  ): Promise<PageContentToJson.Result> {
+    const { page, link: url } = params;
 
-    const content = await page.evaluate(async (url:string) => {
-      let data = null
+    const content = await page.evaluate(async (url: string) => {
+      let data = null;
 
       while (true) {
         // eslint-disable-next-line no-undef
-        const response = await fetch(url)
-        const json = await response.json()
-        console.log({ json })
+        const response = await fetch(url);
+        const json = await response.json();
+        console.log({ json });
 
         if (data) {
-          data = [...data, ...json.data]
+          data = [...data, ...json.data];
         } else {
-          data = json.data
+          data = json.data;
         }
         if (json?.links?.next?.href) {
-          url = json?.links?.next?.href
+          url = json?.links?.next?.href;
         } else {
-          break
+          break;
         }
       }
 
-      return Array.from(data)
-    }, url)
+      return Array.from(data);
+    }, url);
 
-    return content
+    return content;
   }
 }
