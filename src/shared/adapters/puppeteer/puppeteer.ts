@@ -43,23 +43,28 @@ export class PuppeteerAdapter extends AbstractPuppeteer {
     const page = await this.getPage({ browser });
 
     await page.goto(url || env.qlikURL);
-    await page.waitForSelector('.login-box', { timeout: 60000 });
 
-    await page.evaluate(async (env) => {
-      const email = document.getElementById('email');
-      // @ts-ignore
-      email.value = env.qlikLogin;
+    try {
+      await page.waitForSelector('.login-box', { timeout: 60000 });
 
-      const password = document.getElementById('password');
-      // @ts-ignore
-      password.value = env.qlikPassword;
+      await page.evaluate(async (env) => {
+        const email = document.getElementById('email');
+        // @ts-ignore
+        email.value = env.qlikLogin;
 
-      // eslint-disable-next-line promise/param-names
-      await new Promise((r) => setTimeout(r, 2000));
+        const password = document.getElementById('password');
+        // @ts-ignore
+        password.value = env.qlikPassword;
 
-      const btnLogin = document.getElementById('btn-login');
-      btnLogin.click();
-    }, env);
+        // eslint-disable-next-line promise/param-names
+        await new Promise((r) => setTimeout(r, 2000));
+
+        const btnLogin = document.getElementById('btn-login');
+        btnLogin.click();
+      }, env);
+    } catch (error) {
+      console.log({ error });
+    }
 
     await page.waitForSelector('#home-title');
 
