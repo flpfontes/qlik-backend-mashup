@@ -4,7 +4,7 @@
   "main": "index.js",
   "author": "Felipe <felipe@athenasagricola.com.br>",
   "engines": {
-    "node": "18.2.0"
+    "node": ">=18.2.0"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
