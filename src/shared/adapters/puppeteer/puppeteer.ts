@@ -66,7 +66,7 @@ export class PuppeteerAdapter extends AbstractPuppeteer {
       console.log({ error });
     }
 
-    await page.waitForSelector('#home-title');
+    await page.waitForSelector('#navigation-root');
 
     return page;
   }
