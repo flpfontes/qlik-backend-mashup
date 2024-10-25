@@ -26,6 +26,7 @@ model User {
   isAdmin Boolean @map("is_admin")
 
   userVisions UserVision[]
+
   @@map("user")
 }
 
@@ -35,7 +36,6 @@ model Space {
   slug  String  @unique
   group Group[]
 
-
   @@map("space")
 }
 
@@ -44,10 +44,9 @@ model Group {
   name String
   slug String
 
-  space   Space    @relation(fields: [spaceId], references: [id])
+  space   Space    @relation(fields: [spaceId], references: [id], onDelete: Cascade)
   spaceId String   @map("space_id")
   visions Vision[]
-
 
   @@map("group")
 }
@@ -59,12 +58,12 @@ model Vision {
 
   layout Json?
 
-  group   Group   @relation(fields: [groupId], references: [id])
+  group   Group   @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId String  @map("group_id")
   panel   Panel[]
 
-
   userVisions UserVision[]
+
   @@map("vision")
 }
 
@@ -74,11 +73,10 @@ model Panel {
 
   url String
 
-  vision   Vision @relation(fields: [visionId], references: [id])
+  vision   Vision @relation(fields: [visionId], references: [id], onDelete: Cascade)
   visionId String @map("vision_id")
 
   isFull Boolean @default(false) @map("is_full")
-
 
   @@map("panel")
 }
@@ -89,9 +87,8 @@ model UserVision {
   user   User   @relation(fields: [userId], references: [id])
   userId String @map("user_id")
 
-  vision   Vision @relation(fields: [visionId], references: [id])
+  vision   Vision @relation(fields: [visionId], references: [id], onDelete: Cascade)
   visionId String @map("vision_id")
-
 
   @@map("user_vision")
 }
